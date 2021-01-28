@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.microsoft.azure.applicationinsights.v2015_05_01:azure-mgmt-insights:1.0.0-beta">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/applicationinsights/v2015_05_01/azure-mgmt-insights/1.0.0-beta/azure-mgmt-insights-1.0.0-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/applicationinsights/v2015_05_01/azure-mgmt-insights/1.0.0-beta/azure-mgmt-insights-1.0.0-beta-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/microsoft/azure/applicationinsights/v2015_05_01/azure-mgmt-insights/1.0.0-beta/azure-mgmt-insights-1.0.0-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
