@@ -58,11 +58,13 @@ task: Maven@3
 # TODO
 1. use buildpacks and publish image to azure
 2. Use templates or shared yaml for multiple repositories (Taskgroups? https://docs.microsoft.com/en-us/azure/devops/pipelines/library/task-groups?view=azure-devops)
-3. use multiple build agens(jobs) to do parralel builds setup needed?
+3. use multiple build agens(jobs) to do parralel builds setup needed? https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser
 4. Azure pipelines only deploy/release master branch
 5. setup kurbernetes cluster using kustomize or helm
 6. deploy to kubernetes cluster
 7. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
 8. seperate db instead of in memory
 9. release pipelines (acceptance environment + production environment)
-10. CI/CD more validation && releasing
+10. CI/CD more validation && releasing to different environments https://docs.microsoft.com/en-us/azure/devops/pipelines/release/define-multistage-release-process?view=azure-devops&viewFallbackFrom=vsts
+11. 
+11. 
