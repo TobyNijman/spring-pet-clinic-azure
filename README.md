@@ -64,4 +64,5 @@ task: Maven@3
 6. deploy to kubernetes cluster
 7. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
 8. seperate db instead of in memory
-9. release pipelines
+9. release pipelines (acceptance environment + production environment)
+10. CI/CD more validation && releasing
