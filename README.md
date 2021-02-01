@@ -25,6 +25,10 @@ comma-separated list of glob-style wildcard pattern that must match at least one
 ```**/yarn.lock```: all yarn.lock files under the sources directory
 ```*/asset.json, !bin/**```: all asset.json files located in a directory under the sources directory, except under the bin directory
 
+## Restore keys
+restoreKeys can be used if one wants to query against multiple exact keys or key prefixes. This is used to fallback to another key in the case that a key does not yield a hit. A restore key will search for a key by prefix and yield the latest created cache entry as a result. This is useful if the pipeline is unable to find an exact match but wants to use a partial cache hit instead. To insert multiple restore keys, simply delimit them by using a new line to indicate the restore key (see the example for more details). The order of which restore keys will be tried against will be from top to bottom.
+
+## Maven setup
 ```
 variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
