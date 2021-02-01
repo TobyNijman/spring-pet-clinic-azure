@@ -57,7 +57,11 @@ task: Maven@3
 
 # TODO
 1. use buildpacks and publish image to azure
-2. setup kurbernetes cluster using kustomize or helm
-3. deploy to kubernetes cluster
-4. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
-5. seperate db instead of in memory
+2. Use templates or shared yaml for multiple repositories (Taskgroups? https://docs.microsoft.com/en-us/azure/devops/pipelines/library/task-groups?view=azure-devops)
+3. use multiple build agens(jobs) to do parralel builds setup needed?
+4. Azure pipelines only deploy/release master branch
+5. setup kurbernetes cluster using kustomize or helm
+6. deploy to kubernetes cluster
+7. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
+8. seperate db instead of in memory
+9. release pipelines
