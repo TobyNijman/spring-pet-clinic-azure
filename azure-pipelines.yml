@@ -20,6 +20,10 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
+  # Maven cache
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -30,10 +34,20 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
+    - task: Cache@2
+      inputs:
+        key: 'maven | "$(Agent.OS)" | **/pom.xml'
+        restoreKeys: |
+          maven | "$(Agent.OS)"
+          maven
+        path: $(MAVEN_CACHE_FOLDER)
+      displayName: Cache Maven local repo
+
     - task: Maven@3
       displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
 
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
