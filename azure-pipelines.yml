@@ -62,9 +62,7 @@ stages:
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml'
         pathToSources: '$(System.DefaultWorkingDirectory)'
         additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/target/jacoco.exec'
-    
-    # - publish: $(Pipeline.Workspace)
-    #   artifact: build
+
     - task: Maven@3
       displayName: Build Docker image
       inputs:
@@ -76,6 +74,7 @@ stages:
       displayName: Push Docker image
       inputs:
         containerRegistry: 'springpetcliniccontainerregistry'
+        repository: 'spring-pet-clinic-azure'
         command: 'push'
         tags: 'latest'
 
