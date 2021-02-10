@@ -48,10 +48,7 @@ stages:
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-        # default values
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: package
+        publishJUnitResults: false
     - task: PublishTestResults@2
       displayName: 'Publish Test Results'
       inputs:
@@ -62,10 +59,10 @@ stages:
       displayName: 'Publish Test Coverage'
       inputs:
         codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: ${System.DefaultWorkingDirectory}/**/site/jacoco/index.xml
+        summaryFileLocation: ${System.DefaultWorkingDirectory}/**/site/jacoco/jacoco.xml
 
     - task: Maven@3
-      displayName: Build Docker image
+      displayName: 'Build Docker image
       inputs:
         mavenPomFile: 'pom.xml'
         goals: 'spring-boot:build-image'
