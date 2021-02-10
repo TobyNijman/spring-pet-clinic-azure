@@ -28,7 +28,7 @@ stages:
 - stage: Build
   displayName: Build stage
   jobs:
-  - job: MavenPackageAndPublishArtifacts
+  - job: MavenPackageAndPublishTestResults
     displayName: Maven Package and Publish Test Results
     pool:
       vmImage: $(vmImageName)
@@ -62,14 +62,35 @@ stages:
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml'
         pathToSources: '$(System.DefaultWorkingDirectory)'
         additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/target/jacoco.exec'
+    
+    - publish: $(Pipeline.Workspace)
+      artifact: build
 
-    # TODO fixme
-    # - task: Maven@3
-    #   displayName: 'Build Docker image
-    #   inputs:
-    #     mavenPomFile: 'pom.xml'
-    #     goals: 'spring-boot:build-image'
-    #     publishJUnitResults: false
+  - job: MavenBuildAndPublishImage
+    displayName: Maven Package and Publish Test Results
+    dependsOn: MavenPackageAndPublishTestResults
+    pool:
+      vmImage: $(vmImageName)
+    
+    #TODO beter way? maybe caching?
+    steps:
+      - download: current
+        artifact: build
+
+      - task: Maven@3
+        displayName: Build Docker image
+        inputs:
+          mavenPomFile: 'pom.xml'
+          goals: 'spring-boot:build-image'
+          publishJUnitResults: false
+
+      - task: Docker@2
+        displayName: Push Docker image
+        inputs:
+          containerRegistry: 'springpetcliniccontainerregistry'
+          # repository: 'spring-boot-example'
+          command: 'push'
+          tags: 'latest'
 
     # - task: CopyFiles@2
     #   displayName: 'Copy Files to artifact staging directory'
