@@ -67,7 +67,7 @@ stages:
       artifact: build
 
   - job: MavenBuildAndPublishImage
-    displayName: Maven Package and Publish Test Results
+    displayName: Maven Build Docker Image
     dependsOn: MavenPackageAndPublishTestResults
     pool:
       vmImage: $(vmImageName)
