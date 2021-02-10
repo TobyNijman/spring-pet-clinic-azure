@@ -56,14 +56,12 @@ stages:
         testResultsFiles: '**/TEST-*.xml'
 
     - task: PublishCodeCoverageResults@1
-      displayName: 'Publish Test Coverage'
+      displayName: 'Publish Code Coverage'
       inputs:
         codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: '**/jacoco.xml'
-        pathToSources: '**/src/main/java/'
-        reportDirectory: '/**/jacoco-report'
-        additionalCodeCoverageFiles: '**/jacoco.exec'
-        failIfCoverageEmpty: false
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml'
+        pathToSources: '$(System.DefaultWorkingDirectory)'
+        additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/target/jacoco.exec'
 
     # TODO fixme
     # - task: Maven@3

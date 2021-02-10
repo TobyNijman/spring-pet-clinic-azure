@@ -188,18 +188,14 @@
             <goals> 
               <goal>prepare-agent</goal> 
             </goals> 
-          </execution>
-          <execution>
-            <id>jacoco-report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <!-- default target/jscoco/site/* -->
-            <configuration>
-              <outputDirectory>target/jacoco-report</outputDirectory>
-            </configuration>
-          </execution>
+          </execution>  
+          <execution> 
+            <id>report</id>  
+            <phase>prepare-package</phase>  
+            <goals> 
+              <goal>report</goal> 
+            </goals> 
+          </execution> 
         </executions> 
       </plugin>
       <!-- Spring Boot Actuator displays build-related information if a git.properties
