@@ -63,6 +63,7 @@ stages:
         pathToSources: '$(System.DefaultWorkingDirectory)'
         additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/target/jacoco.exec'
 
+    # TODO speed up this build now 6+ minutes
     - task: Maven@3
       displayName: Build Docker image
       inputs:
