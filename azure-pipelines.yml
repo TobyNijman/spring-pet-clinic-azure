@@ -29,7 +29,7 @@ stages:
   displayName: Build stage
   jobs:
   - job: MavenPackageAndPublishArtifacts
-    displayName: Maven Package and Publish Artifacts
+    displayName: Maven Package and Publish Test Results
     pool:
       vmImage: $(vmImageName)
     
@@ -60,7 +60,9 @@ stages:
       inputs:
         codeCoverageTool: 'JaCoCo'
         summaryFileLocation: '**/jacoco.xml'
-        reportDirectory: '/**/site/jacoco'
+        reportDirectory: '/**/jacoco'
+        additionalCodeCoverageFiles: '**/jacoco.exec'
+        failIfCoverageEmpty: false
 
     # TODO fixme
     # - task: Maven@3
