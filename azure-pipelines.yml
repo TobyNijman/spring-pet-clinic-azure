@@ -68,8 +68,8 @@ stages:
       displayName: Build Docker image
       inputs:
         mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m $(MAVEN_OPTS) -DskipTests'
-        goals: 'spring-boot:build-image'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+        goals: 'spring-boot:build-image -DskipTests'
         publishJUnitResults: false
 
     - task: Docker@2
