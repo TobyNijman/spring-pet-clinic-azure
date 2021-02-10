@@ -60,6 +60,7 @@ stages:
       inputs:
         codeCoverageTool: 'JaCoCo'
         summaryFileLocation: '**/jacoco.xml'
+        reportDirectory: '/**/site/jacoco'
 
     # TODO fixme
     # - task: Maven@3
