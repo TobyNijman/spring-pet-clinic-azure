@@ -163,7 +163,8 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <image>
-            <name>springpetcliniccontainerregistry.azurecr.io/${project.artifactId}</name>
+            <!-- determines the image name and versrion -->
+            <name>springpetcliniccontainerregistry.azurecr.io/${project.artifactId}:latest</name>
           </image>
           <layers>
             <enabled>true</enabled>
