@@ -59,14 +59,15 @@ stages:
       displayName: 'Publish Test Coverage'
       inputs:
         codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: ${System.DefaultWorkingDirectory}/**/site/jacoco/jacoco.xml
+        summaryFileLocation: '**/jacoco.xml'
 
-    - task: Maven@3
-      displayName: 'Build Docker image
-      inputs:
-        mavenPomFile: 'pom.xml'
-        goals: 'spring-boot:build-image'
-        publishJUnitResults: false
+    # TODO fixme
+    # - task: Maven@3
+    #   displayName: 'Build Docker image
+    #   inputs:
+    #     mavenPomFile: 'pom.xml'
+    #     goals: 'spring-boot:build-image'
+    #     publishJUnitResults: false
 
     # - task: CopyFiles@2
     #   displayName: 'Copy Files to artifact staging directory'
