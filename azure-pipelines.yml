@@ -60,7 +60,7 @@ stages:
       inputs:
         codeCoverageTool: 'JaCoCo'
         summaryFileLocation: '**/jacoco.xml'
-        pathToSources: '**/src/main/java/.'
+        pathToSources: '**/src/main/java/'
         reportDirectory: '/**/jacoco-report'
         additionalCodeCoverageFiles: '**/jacoco.exec'
         failIfCoverageEmpty: false
