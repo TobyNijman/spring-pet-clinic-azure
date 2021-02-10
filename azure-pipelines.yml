@@ -63,19 +63,19 @@ stages:
         pathToSources: '$(System.DefaultWorkingDirectory)'
         additionalCodeCoverageFiles: '$(System.DefaultWorkingDirectory)/target/jacoco.exec'
     
-    - publish: $(Pipeline.Workspace)
-      artifact: build
+    # - publish: $(Pipeline.Workspace)
+    #   artifact: build
 
   - job: MavenBuildAndPublishImage
     displayName: Maven Build Docker Image
-    dependsOn: MavenPackageAndPublishTestResults
+    dependsOn: [] # this removes the implicit dependency on previous stage and causes this to run in parallel
     pool:
       vmImage: $(vmImageName)
     
     #TODO beter way? maybe caching?
     steps:
-      - download: current
-        artifact: build
+      # - download: current
+      #   artifact: build
 
       - task: Maven@3
         displayName: Build Docker image
@@ -88,7 +88,7 @@ stages:
         displayName: Push Docker image
         inputs:
           containerRegistry: 'springpetcliniccontainerregistry'
-          # repository: 'spring-boot-example'
+          repository: 'spring-pet-clinic'
           command: 'push'
           tags: 'latest'
 
