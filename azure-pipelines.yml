@@ -53,10 +53,16 @@ stages:
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: package
     - task: PublishTestResults@2
-      displayName: 'Publish test results'
+      displayName: 'Publish Test Results'
       inputs:
         testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-        testResultsFiles: '**/TEST-*.xml' 
+        testResultsFiles: '**/TEST-*.xml'
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish Test Coverage'
+      inputs:
+        codeCoverageTool: 'JaCoCo'
+        summaryFileLocation: ${System.DefaultWorkingDirectory}/**/site/jacoco/index.xml
 
     - task: Maven@3
       displayName: Build Docker image
