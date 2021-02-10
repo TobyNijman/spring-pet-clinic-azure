@@ -65,32 +65,50 @@ stages:
     
     # - publish: $(Pipeline.Workspace)
     #   artifact: build
-
-  - job: MavenBuildAndPublishImage
-    displayName: Maven Build Docker Image
-    dependsOn: [] # this removes the implicit dependency on previous stage and causes this to run in parallel
-    pool:
-      vmImage: $(vmImageName)
-    
-    #TODO beter way? maybe caching?
-    steps:
-      # - download: current
-      #   artifact: build
-
-      - task: Maven@3
-        displayName: Build Docker image
-        inputs:
-          mavenPomFile: 'pom.xml'
-          goals: 'spring-boot:build-image'
-          publishJUnitResults: false
+    - task: Maven@3
+      displayName: Build Docker image
+      inputs:
+        mavenPomFile: 'pom.xml'
+        goals: 'spring-boot:build-image'
+        publishJUnitResults: false
 
       - task: Docker@2
         displayName: Push Docker image
         inputs:
           containerRegistry: 'springpetcliniccontainerregistry'
-          repository: 'spring-pet-clinic'
           command: 'push'
           tags: 'latest'
+
+#  - job: MavenBuildAndPublishImage
+#    displayName: Maven Build Docker Image
+#    #dependsOn: [] # this removes the implicit dependency on previous stage and causes this to run in parallel
+#    pool:
+#      vmImage: $(vmImageName)
+#
+#    steps:
+#      - task: Cache@2
+#        displayName: Cache Maven local repo docker image build
+#        inputs:
+#          key: 'maven | "$(Agent.OS)" | **/pom.xml'
+#          restoreKeys: |
+#            maven | "$(Agent.OS)"
+#            maven
+#          path: $(MAVEN_CACHE_FOLDER)
+#
+#      - task: Maven@3
+#        displayName: Build Docker image
+#        inputs:
+#          mavenPomFile: 'pom.xml'
+#          goals: 'spring-boot:build-image'
+#          publishJUnitResults: false
+#
+#      - task: Docker@2
+#        displayName: Push Docker image
+#        inputs:
+#          containerRegistry: 'springpetcliniccontainerregistry'
+#          repository: 'spring-pet-clinic'
+#          command: 'push'
+#          tags: 'latest'
 
     # - task: CopyFiles@2
     #   displayName: 'Copy Files to artifact staging directory'

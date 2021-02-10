@@ -160,7 +160,16 @@
       </plugin>  
       <plugin> 
         <groupId>org.springframework.boot</groupId>  
-        <artifactId>spring-boot-maven-plugin</artifactId>  
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <image>
+            <name>springpetcliniccontainerregistry.azurecr.io/${project.artifactId}</name>
+          </image>
+          <layers>
+            <enabled>true</enabled>
+            <includeLayerTools>true</includeLayerTools>
+          </layers>
+        </configuration>
         <executions> 
           <execution> 
             <!-- Spring Boot Actuator displays build-related information
