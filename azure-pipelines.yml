@@ -74,7 +74,7 @@ stages:
       displayName: Push Docker image
       inputs:
         containerRegistry: 'springpetcliniccontainerregistry'
-        repository: 'spring-pet-clinic-azure'
+        repository: 'spring-pet-clinic'
         command: 'push'
         tags: 'latest'
 
