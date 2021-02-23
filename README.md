@@ -1,3 +1,6 @@
+[![Build Status](https://dev.azure.com/tobyn0394/tobyn/_apis/build/status/TobyNijman.spring-pet-clinic-azure?branchName=main)](https://dev.azure.com/tobyn0394/tobyn/_build/latest?definitionId=1&branchName=main)
+![Azure DevOps tests (branch)](https://img.shields.io/azure-devops/tests/tobyn0394/tobyn/1/main)
+![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/tobyn0394/tobyn/1/main)
 # spring-pet-clinic-azure
 https://github.com/spring-petclinic
 
