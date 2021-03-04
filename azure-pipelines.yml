@@ -77,11 +77,18 @@ stages:
   displayName: Build stage
   jobs:
   - job: DeployToKubernetes
-    displayname: Deployment to kubernetes
+    displayName: Deployment to kubernetes
     pool:
       vmImage: $(vmImageName)
 
     steps:
+    - task: HelmInstaller@0
+      displayName: Helm Installer
+      inputs:
+        helmVersion: '2.14.1'
+        installKubectl: true
+
+
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
