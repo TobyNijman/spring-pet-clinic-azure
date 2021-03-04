@@ -94,7 +94,7 @@ stages:
         chartPathForACR: '$(System.DefaultWorkingDirectory)/petclinicazure'
         azureResourceGroupForACR: ResourceGroupContainerRegistry
         azureContainerRegistry: springpetcliniccontainerregistry
-        azureSubscriptionForACR: '512eb81b-5963-4e78-8117-ae26b1148a33'
+        azureSubscriptionForACR: '09319cd6-009c-4ff4-9518-b30522744c60'
 
 
 #  - job: MavenBuildAndPublishImage
