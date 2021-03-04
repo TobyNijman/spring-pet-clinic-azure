@@ -88,15 +88,6 @@ stages:
         helmVersion: 'latest'
         installKubectl: true
 
-    - task: HelmDeploy@0
-      inputs:
-        command: 'package'
-        chartNameForACR: springpetcliniccontainerregistry.azurecr.io/helm/petclinicazure:v1
-        chartPathForACR: '$(System.DefaultWorkingDirectory)/petclinicazure'
-        azureResourceGroupForACR: ResourceGroupContainerRegistry
-        azureContainerRegistry: springpetcliniccontainerregistry
-        azureSubscriptionForACR: $(azureSubscription)
-
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
