@@ -74,7 +74,7 @@ stages:
         tags: 'latest'
 
   - job: DeployToKubernetes
-    displaynemt: Deployment to kubernetes
+    displayname: Deployment to kubernetes
     pool:
       vmImage: $(vmImageName)
 
