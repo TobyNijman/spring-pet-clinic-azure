@@ -73,6 +73,13 @@ stages:
         command: 'push'
         tags: 'latest'
 
+  - job: DeployToKubernetes
+    displaynemt: Deployment to kubernetes
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
 #    #dependsOn: [] # this removes the implicit dependency on previous stage and causes this to run in parallel
