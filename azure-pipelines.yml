@@ -87,7 +87,15 @@ stages:
       inputs:
         helmVersion: 'latest'
         installKubectl: true
-
+    - task: HelmDeploy@0
+      displayName: Helm List
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+        azureResourceGroup: 'PetClinic'
+        kubernetesCluster: 'petclinickubernetes'
+        namespace: 'petclinictest'
+        command: 'ls'
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
