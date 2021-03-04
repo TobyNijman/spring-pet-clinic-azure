@@ -91,10 +91,11 @@ stages:
     - task: HelmDeploy@0
       inputs:
         command: 'package'
+        chartNameForACR: springpetcliniccontainerregistry.azurecr.io/helm/petclinicazure:v1
         chartPathForACR: '$(System.DefaultWorkingDirectory)/petclinicazure'
         azureResourceGroupForACR: ResourceGroupContainerRegistry
         azureContainerRegistry: springpetcliniccontainerregistry
-        azureSubscriptionForACR: '09319cd6-009c-4ff4-9518-b30522744c60'
+        azureSubscriptionForACR: $(azureSubscription)
 
 
 #  - job: MavenBuildAndPublishImage
