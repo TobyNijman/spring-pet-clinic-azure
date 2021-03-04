@@ -73,6 +73,9 @@ stages:
         command: 'push'
         tags: 'latest'
 
+- stage: Build
+  displayName: Build stage
+  jobs:
   - job: DeployToKubernetes
     displayname: Deployment to kubernetes
     pool:
