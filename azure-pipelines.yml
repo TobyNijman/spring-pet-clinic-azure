@@ -69,10 +69,26 @@ stages:
     - task: Docker@2
       displayName: Push Docker image
       inputs:
-        containerRegistry: 'springpetcliniccontainerregistry'
+        containerRegistry: 'containerregistrypetclinic'
         repository: 'spring-petclinic'
         command: 'push'
         tags: 'latest'
+
+    - task: HelmInstaller@0
+      displayName: Helm Installer
+      inputs:
+        helmVersion: 'latest'
+        installKubectl: true
+
+    - task: HelmDeploy@0
+      displayName: Publish Helm chart
+      inputs:
+        azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+        azureResourceGroupForACR: 'PetClinic'
+        azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
+        command: 'save'
+        chartNameForACR: 'petclinic'
+        chartPathForACR: './petclinicazure'
 
 - stage: Deploy
   displayName: Deploy stage
