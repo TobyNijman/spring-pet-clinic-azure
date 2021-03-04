@@ -24,6 +24,11 @@ variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
+  azureSubscriptionEndpoint: PetClinic
+  azureContainerRegistry: springpetcliniccontainerregistry.azurecr.io
+  azureResourceGroup: PetClinic
+  kubernetesCluster: petclinickubernetes
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -96,6 +101,14 @@ stages:
         kubernetesCluster: 'petclinickubernetes'
         namespace: 'petclinictest'
         command: 'ls'
+
+    - task: HelmDeploy@0
+      displayName: Helm List
+      inputs:
+        command: 'package'
+        chartPath: './petclinicazure'
+        chartVersion: 'latest'
+
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
