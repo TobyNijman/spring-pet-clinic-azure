@@ -105,6 +105,7 @@ stages:
       inputs:
         helmVersion: 'latest'
         installKubectl: true
+
     - task: HelmDeploy@0
       displayName: Helm List
       inputs:
@@ -115,41 +116,43 @@ stages:
         namespace: $(namespace)
         command: 'ls'
 
-    - task: HelmDeploy@0
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscription: $(serviceConnection)
-        azureResourceGroup: $(resourceGroup)
-        kubernetesCluster: $(kubernetesCluster)
-        namespace: '$(namespace)'
-        command: 'init'
 
-    # fix deploy
+    # Helm Deploy
     # - task: HelmDeploy@0
-    #   displayName: 'Helm Upgrade'
+    #   displayName: Helm Init
     #   inputs:
-    #     connectionType: 'Azure Resource Manager'
-    #     azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+    #     azureSubscriptionEndpoint: $(serviceConnection)
     #     azureResourceGroup: $(resourceGroup)
-    #     kubernetesCluster: 'petclinickubernetes'
-    #     namespace: $(namespace)
-    #     command: upgrade
-    #     chartName: 'petclinic'
-    #     releaseName: petclinic
-    #     azureSubscriptionForACR: $(serviceConnection)
-    #     azureResourceGroupForACR: 'PetClinic'
-    #     azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
-    #     chartNameForACR: 'petclinic'
+    #     kubernetesCluster: $(kubernetesCluster)
+    #     command: init
+    #     arguments: --client-only
+
+    - task: HelmDeploy@0
+      displayName: Helm Upgrade
+      inputs:
+        command: 'upgrade'
+        chartType: 'Name'
+        chartName: 'petclinic'
+        releaseName: 'petclinic'
+        recreate: true
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: $(serviceConnection)
+        azureResourceGroup: $(resourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
+        azureSubscriptionForACR: $(serviceConnection)
+        azureResourceGroupForACR: $(resourceGroup)
+        azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
 
     - task: HelmDeploy@0
       displayName: Helm List
       inputs:
+        command: 'ls'
         connectionType: 'Azure Resource Manager'
         azureSubscription: $(serviceConnection)
         azureResourceGroup: $(resourceGroup)
         kubernetesCluster: $(kubernetesCluster)
         namespace: $(namespace)
-        command: 'ls'
+
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
