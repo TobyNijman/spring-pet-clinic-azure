@@ -88,6 +88,7 @@ stages:
         azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
         chartNameForACR: 'petclinic'
         chartPathForACR: './petclinicazure'
+        chartVersion: 'latest'
 
 - stage: Deploy
   displayName: Deploy stage
