@@ -7,11 +7,9 @@ trigger:
 - main
 
 variables:
-  # Web app name
-  webAppName: 'PetClinicTest'
-
-  # Environment name
-  environmentName: 'PetClinic'
+  # general
+  serviceConnection: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+  resourceGroup: 'PetClinic'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -20,10 +18,11 @@ variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
+  # deploy
   # azureSubscriptionEndpoint: PetClinic
-  # azureContainerRegistry: springpetcliniccontainerregistry.azurecr.io
-  # azureResourceGroup: PetClinic
-  # kubernetesCluster: petclinickubernetes
+  azureContainerRegistry: containerregistrypetclinic.azurecr.io
+  kubernetesCluster: 'petclinickubernetes'
+  namespace: 'petclinictest'
 
 stages:
 - stage: Build
@@ -84,8 +83,8 @@ stages:
       displayName: Publish Helm chart
       inputs:
         command: 'save'
-        azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-        azureResourceGroupForACR: 'PetClinic'
+        azureSubscriptionForACR: $(serviceConnection)
+        azureResourceGroupForACR: $(resourceGroup)
         azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
         chartNameForACR: 'petclinic'
         chartPathForACR: './petclinicazure'
@@ -108,36 +107,37 @@ stages:
       displayName: Helm List
       inputs:
         connectionType: 'Azure Resource Manager'
-        azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-        azureResourceGroup: 'PetClinic'
-        kubernetesCluster: 'petclinickubernetes'
-        namespace: 'petclinictest'
+        azureSubscription: $(serviceConnection)
+        azureResourceGroup: $(resourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
+        namespace: $(namespace)
         command: 'ls'
 
-    - task: HelmDeploy@0
-      displayName: 'Helm Upgrade'
-      inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-        azureResourceGroup: 'PetClinic'
-        kubernetesCluster: 'petclinickubernetes'
-        namespace: 'petclinictest'
-        command: upgrade
-        chartName: 'petclinic'
-        releaseName: petclinic
-        azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-        azureResourceGroupForACR: 'PetClinic'
-        azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
-        chartNameForACR: 'petclinic'
+    # fix deploy
+    # - task: HelmDeploy@0
+    #   displayName: 'Helm Upgrade'
+    #   inputs:
+    #     connectionType: 'Azure Resource Manager'
+    #     azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+    #     azureResourceGroup: $(resourceGroup)
+    #     kubernetesCluster: 'petclinickubernetes'
+    #     namespace: $(namespace)
+    #     command: upgrade
+    #     chartName: 'petclinic'
+    #     releaseName: petclinic
+    #     azureSubscriptionForACR: $(serviceConnection)
+    #     azureResourceGroupForACR: 'PetClinic'
+    #     azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
+    #     chartNameForACR: 'petclinic'
 
     - task: HelmDeploy@0
       displayName: Helm List
       inputs:
         connectionType: 'Azure Resource Manager'
-        azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-        azureResourceGroup: 'PetClinic'
-        kubernetesCluster: 'petclinickubernetes'
-        namespace: 'petclinictest'
+        azureSubscription: $(serviceConnection)
+        azureResourceGroup: $(resourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
+        namespace: $(namespace)
         command: 'ls'
 
 #  - job: MavenBuildAndPublishImage
