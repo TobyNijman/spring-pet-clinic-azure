@@ -120,7 +120,7 @@ stages:
         connectionType: 'Kubernetes Service Connection'
         kubernetesServiceConnection: petclinickubernetes
         command: upgrade
-        chartName: '$(name)'
+        chartName: 'petclinic'
         releaseName: petclinic
         azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
         azureResourceGroupForACR: 'PetClinic'
