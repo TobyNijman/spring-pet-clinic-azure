@@ -83,10 +83,10 @@ stages:
     - task: HelmDeploy@0
       displayName: Publish Helm chart
       inputs:
+        command: 'save'
         azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
         azureResourceGroupForACR: 'PetClinic'
         azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
-        command: 'save'
         chartNameForACR: 'petclinic'
         chartPathForACR: './petclinicazure'
 
@@ -113,6 +113,21 @@ stages:
         kubernetesCluster: 'petclinickubernetes'
         namespace: 'petclinictest'
         command: 'ls'
+
+    - task: HelmDeploy@0
+      displayName: 'Helm Upgrade'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: petclinickubernetes
+        command: upgrade
+        chartName: '$(name)'
+        releaseName: petclinic
+        azureSubscriptionForACR: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+        azureResourceGroupForACR: 'PetClinic'
+        azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
+        chartNameForACR: 'petclinic'
+
+
 
 #  - job: MavenBuildAndPublishImage
 #    displayName: Maven Build Docker Image
