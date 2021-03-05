@@ -116,31 +116,21 @@ stages:
         namespace: $(namespace)
         command: 'ls'
 
-
-    # Helm Deploy
+    # TODO fixme
     # - task: HelmDeploy@0
-    #   displayName: Helm Init
+    #   displayName: Helm Upgrade
     #   inputs:
-    #     azureSubscriptionEndpoint: $(serviceConnection)
+    #     command: 'upgrade'
+    #     chartType: 'Name'
+    #     chartName: 'helm/petclinic'
+    #     releaseName: 'petclinic'
+    #     connectionType: 'Azure Resource Manager'
+    #     azureSubscription: $(serviceConnection)
     #     azureResourceGroup: $(resourceGroup)
     #     kubernetesCluster: $(kubernetesCluster)
-    #     command: init
-    #     arguments: --client-only
-
-    - task: HelmDeploy@0
-      displayName: Helm Upgrade
-      inputs:
-        command: 'upgrade'
-        chartType: 'Name'
-        chartName: 'helm/petclinic'
-        releaseName: 'petclinic'
-        connectionType: 'Azure Resource Manager'
-        azureSubscription: $(serviceConnection)
-        azureResourceGroup: $(resourceGroup)
-        kubernetesCluster: $(kubernetesCluster)
-        azureSubscriptionForACR: $(serviceConnection)
-        azureResourceGroupForACR: $(resourceGroup)
-        azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
+    #     azureSubscriptionForACR: $(serviceConnection)
+    #     azureResourceGroupForACR: $(resourceGroup)
+    #     azureContainerRegistry: 'containerregistrypetclinic.azurecr.io'
 
     - task: HelmDeploy@0
       displayName: Helm List
