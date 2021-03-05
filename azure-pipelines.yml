@@ -134,7 +134,6 @@ stages:
         chartType: 'Name'
         chartName: 'petclinic'
         releaseName: 'petclinic'
-        recreate: true
         connectionType: 'Azure Resource Manager'
         azureSubscription: $(serviceConnection)
         azureResourceGroup: $(resourceGroup)
