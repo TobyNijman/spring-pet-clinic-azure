@@ -132,7 +132,7 @@ stages:
       inputs:
         command: 'upgrade'
         chartType: 'Name'
-        chartName: 'petclinic'
+        chartName: 'helm/petclinic'
         releaseName: 'petclinic'
         connectionType: 'Azure Resource Manager'
         azureSubscription: $(serviceConnection)
