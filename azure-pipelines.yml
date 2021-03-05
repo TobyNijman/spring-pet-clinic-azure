@@ -115,6 +115,15 @@ stages:
         namespace: $(namespace)
         command: 'ls'
 
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscription: $(serviceConnection)
+        azureResourceGroup: $(resourceGroup)
+        kubernetesCluster: $(kubernetesCluster)
+        namespace: '$(namespace)'
+        command: 'init'
+
     # fix deploy
     # - task: HelmDeploy@0
     #   displayName: 'Helm Upgrade'
