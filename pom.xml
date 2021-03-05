@@ -164,7 +164,7 @@
         <configuration>
           <image>
             <!-- determines the image name and versrion -->
-            <name>springpetcliniccontainerregistry.azurecr.io/${project.artifactId}:latest</name>
+            <name>containerregistrypetclinic.azurecr.io/${project.artifactId}:latest</name>
           </image>
           <layers>
             <enabled>true</enabled>
