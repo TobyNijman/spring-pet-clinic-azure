@@ -91,6 +91,8 @@ stages:
 
 - stage: Deploy
   displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
   jobs:
   - job: DeployToKubernetes
     displayName: Deployment to kubernetes
