@@ -73,7 +73,7 @@ stages:
         command: 'push'
         tags: 'latest'
 
- - stage: Deploy
+- stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
   condition: succeeded()
