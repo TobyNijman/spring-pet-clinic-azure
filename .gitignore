@@ -2,7 +2,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,windows,macos
 
+# Target dir
+target/
 ### Java ###
+
 # Compiled class file
 *.class
 
