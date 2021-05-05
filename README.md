@@ -58,7 +58,11 @@ task: Maven@3
     mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
 ```
 
-## Buildpack setup
+## Buildpacks setup
+### What are Cloud Native Buildpacks?
+From https://buildpacks.io/:
+*Cloud Native Buildpacks transform your application source code into images that can run on any cloud.*
+
 Add the following to the [pom.xml](https://github.com/TobyNijman/spring-pet-clinic-azure/blob/main/pom.xml).
 ```
 <configuration>
@@ -99,7 +103,7 @@ To push to the azure container registry we can add the following step in the pip
 ```
 
 ##Deploying the image
-
+***(WIP)***
 
 
 ##(Unit) testing best practices
@@ -246,7 +250,7 @@ Finish reading https://martinfowler.com/testing/
 5. Mutation testing
     - using https://pitest.org/ [Baeldung](https://www.baeldung.com/java-mutation-testing-with-pitest)
 6. Archunit basic setup
-7. Contract testing [Baeldung](https://www.baeldung.com/pact-junit-consumer-driven-contracts)
+7. Contract testing usin Pact [Baeldung](https://www.baeldung.com/pact-junit-consumer-driven-contracts)
     - REST
     - Kafka/Messages
     - with pact broker
