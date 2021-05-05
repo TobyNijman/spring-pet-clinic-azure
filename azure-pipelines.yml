@@ -73,27 +73,26 @@ stages:
         command: 'push'
         tags: 'latest'
 
-
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-   - deployment: DeployLinuxWebApp
-     displayName: Deploy Linux Web App
-     environment: $(environmentName)
-     pool:
-      vmImage: $(vmImageName)
-      strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy Azure App Service'
-            inputs:
-              azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-              appType: webAppContainer
-              WebAppName: springPetClinicAzure
-              DockerNamespace: containerregistrypetclinic.azurecr.io
-              DockerRepository: 'spring-petclinic'
-              DockerImageTag: latest
+#- stage: Deploy
+#  displayName: Deploy stage
+#  dependsOn: Build
+#  condition: succeeded()
+#  jobs:
+#   - deployment: DeployLinuxWebApp
+#     displayName: Deploy Linux Web App
+#     environment: $(environmentName)
+#     pool:
+#      vmImage: $(vmImageName)
+#      strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - task: AzureRmWebAppDeployment@4
+#            displayName: 'Deploy Azure App Service'
+#            inputs:
+#              azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+#              appType: webAppContainer
+#              WebAppName: springPetClinicAzure
+#              DockerNamespace: containerregistrypetclinic.azurecr.io
+#              DockerRepository: 'spring-petclinic'
+#              DockerImageTag: latest
