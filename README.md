@@ -118,9 +118,6 @@ Steps:
     - By clicking on the lightning bolt a Continuous deployment trigger can be setup. 
       This creates a release every time an image is pushed to the selected repository.
     - If another artifact type is selected this trigger can be setup on different events
-    <br/>
-    ![Screenshot](readme-images/artifact.PNG)
-    <br/>
       
 6. Go to Stages and click on job/task link at the bottom
 7. click unlink all
