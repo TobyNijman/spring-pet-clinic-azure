@@ -73,17 +73,18 @@ stages:
         command: 'push'
         tags: 'latest'
 
+
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
   condition: succeeded()
   jobs:
    - deployment: DeployLinuxWebApp
-    displayName: Deploy Linux Web App
-    environment: $(environmentName)
-    pool:
+     displayName: Deploy Linux Web App
+     environment: $(environmentName)
+     pool:
       vmImage: $(vmImageName)
-    strategy:
+      strategy:
       runOnce:
         deploy:
           steps:
