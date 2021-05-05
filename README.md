@@ -103,8 +103,55 @@ To push to the azure container registry we can add the following step in the pip
 ```
 
 ##Deploying the image
-***(WIP)***
+Done by creating a release pipelines which deploys to a custom container app service on every image version update.
+<br/>
+![Screenshot](readme-images/release-pipeline.PNG)
+<br/>
+Steps:
+1. go to https://dev.azure.com/
+2. go to releases
+3. create new release pipeline
+4. Select Azure app service deployment
+5. Add an artifact
+    - azure container registry
+    - select the containerregistry, image, version etc
+    - By clicking on the lightning bolt a Continuous deployment trigger can be setup. 
+      This creates a release every time an image is pushed to the selected repository.
+    - If another artifact type is selected this trigger can be setup on different events
+<br/>
+![Screenshot](readme-images/artifact.PNG)
+<br/>
+      
+6. Go to Stages and click on job/task link at the bottom
+7. click unlink all
+8. setup the correct image name etc for the deploy Azure App Service task
+    <br/>
+    ![Screenshot](readme-images/task.PNG)
+    <br/>
+   
+    - The resulting yaml for the task will look like this:
+    ```
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy Azure App Service'
+      inputs:
+      azureSubscription: <You azure subscription>
+      appType: webAppContainer
+      WebAppName: springPetClinicAzure
+      DockerNamespace: <azure container registry url> #Example: test.azurecr.io
+      DockerRepository: <docker repository>
+      DockerImageTag: latest
+    ```
 
+###Port configuration
+For the spring pet store the application was not visible for the app service at first and showed an error instead of the pet store, this was due to the port configuration.
+
+By default, the App Service for the custom container will listen to port 80. To change this, configure the WEBSITES_PORT configuration in the App Service. 
+This is also possible via the shell.
+```
+//Azure CLI
+az webapp config appsettings set --resource-group <group-name> --name <app-name> --settings WEBSITES_PORT=8000
+```
 
 ##(Unit) testing best practices
 **(WIP)**
@@ -236,6 +283,11 @@ To push to the azure container registry we can add the following step in the pip
 # TODO
 Finish reading https://martinfowler.com/testing/
 
+Look into:
+Release pipelines
+Azure App Service deployment with tests and performance tests
+Deploy your Azure Web App and run tests or cloud-based web performance tests.
+
 1. document deployment based on a image from the containerregistry in azure
 2. add assertion framworks/libraries (do multiple to show difference in syntax and error messages?)
     - assertj
@@ -279,6 +331,7 @@ Finish reading https://martinfowler.com/testing/
     - https://www.javacodegeeks.com/2020/08/end-to-end-testing-in-agile-all-you-need-to-know.html
 13. Performance testing (Pick one)
     - JMeter
+      can be done in the release pipeline...Cloud-based Apache JMeter load test
     - Gatling
 14. Penetration testing
     - Mostly done by external companies consisting of professionals
