@@ -31,7 +31,7 @@ comma-separated list of glob-style wildcard pattern that must match at least one
 ## Restore keys
 restoreKeys can be used if one wants to query against multiple exact keys or key prefixes. This is used to fallback to another key in the case that a key does not yield a hit. A restore key will search for a key by prefix and yield the latest created cache entry as a result. This is useful if the pipeline is unable to find an exact match but wants to use a partial cache hit instead. To insert multiple restore keys, simply delimit them by using a new line to indicate the restore key (see the example for more details). The order of which restore keys will be tried against will be from top to bottom.
 
-## Maven setup
+## Maven caching setup
 ```
 variables:
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
@@ -58,16 +58,231 @@ task: Maven@3
     mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
 ```
 
+## Buildpack setup
+Add the following to the [pom.xml](https://github.com/TobyNijman/spring-pet-clinic-azure/blob/main/pom.xml).
+```
+<configuration>
+          <image>
+            <name>containerregistrypetclinic.azurecr.io/${project.artifactId}:latest</name>
+          </image>
+          <layers>
+            <enabled>true</enabled>
+            <includeLayerTools>true</includeLayerTools>
+          </layers>
+        </configuration>
+```
+In the snippet above the name contains the containerRegistry present on azure and the resulting image name and version.
+
+To use buildpacks in the azure pipeline you will need to change the maven command used.
+
+The new maven build step is defined as follows:
+```
+- task: Maven@3
+  displayName: Build
+  inputs:
+  mavenPomFile: 'pom.xml'
+  mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+  goals: 'spring-boot:build-image'
+  publishJUnitResults: false
+```
+
+##Publishing the build image to azure
+To push to the azure container registry we can add the following step in the pipeline.
+```
+    - task: Docker@2
+      displayName: Push Docker image
+      inputs:
+        containerRegistry: 'containerregistrypetclinic'
+        repository: 'spring-petclinic'
+        command: 'push'
+        tags: 'latest'
+```
+
+##Deploying the image
+
+
+
+##(Unit) testing best practices
+**(WIP)**
+
+- Using the Give, When, Then structure:
+    ```
+    public void findProduct() {
+        // Given
+        insertIntoDatabase(new DTO(...));
+        
+        // When
+        Product product = dao.findProduct(100);
+        
+        // Then
+        assertThat(product.getName()).isEqualTo("Smartphone");
+    }
+    ```
+- Clear and easy to understand naming
+    - Use clear test naming
+      ```
+        // not clear what is tested
+        @Test
+        ageTest()
+      
+        // examples of better naming
+        @Test
+        IsNotAnAdultIfAgeLessThan18()
+        should_ThrowException_When_AgeLessThan18()
+        When_AgeLessThan18_Expect_isAdultAsFalse
+      ```
+    - Use clear variable names
+        - using prefixes like ***actual*** and ***expected*** can make the test easier to read.
+
+- Test data
+    - Randomized vs Fixed data
+        - Randomized data sound like a good solution for preparing test data, but in most cases this could actually hinder the test.
+            - Tests using randomized data could be unstable
+            - in some cases using random test data makes it harder to pinpoint the point of failure since the data is changing on every test run
+        - Fixed data
+    - LocalDate(time).now()
+        - in most cases it is best to not use this way of initializing dates since this is still technically random data since it changes on every run
+        - There might be some edge cases where logic is based on dates which works on all days except for the last day of the month, in this case the test will fail every last day of the month even if it ran for 20 days succesfully.
+
+- Keep it small(simple) and specific
+    - Writing (unit)tests should be simple and straight forward. 
+    - Should this not be the case there might be a problem with the actual implementation
+        - example: Code could be to tightly coupled or not modular enough, which will result in needing a lot of dependencies and mocks in the unit test
+    - use helper functions to instatiate test data, these helper functions can be reused in multiple test cases reducing the duplicate code
+    - complex assertions can also be extracted to a seperate well named method
+    - Try not to expand unit tests into infinity
+        - In a lot of cases it is really easy to just add some lines or assertions to an existing testCase to test some new functionality,
+          however it might be a better idea to actually keep that test case as is and just create a new unit test specifically for the new functionaly.
+    - Specific assertions,
+        - Try to assert only the main goal of the unit test
+        - One good assertion is better than 10 assertions which do not assert the main goal of the test
+        - Example:
+            Unit testing a GET Rest endpoint could be done in a single test case but a better solution would be to split it into seperate test cases for:
+            - Serialization/mapping
+            - queryParams
+            - Business Logic, for instance some calculations for which the results need to be returned
+                - could be split into multiple test cases also
+            - Exception flow
+                - in case of multiple exceptions, create a test case for every single one of them
+                - in case of multiple conditions this can be compined into a parameterized test
+ 
+    - Parameterized tests, run the same test with different in/outputs
+        - Saves a lot of time create a unit test for each and every case
+        - If multiple test cases have the same in and output they can in most cases be combined
+        - ***Do not use if-else of swithc statements in these test cases***, when you need this in most cases it is better to split those test cases up again. Using switch statements and if-else blocks makes test code a lot more complicated to understand
+
+- Do not use/copy production code ***WIP - Better example codes***
+    - The following test case uses production code to setup the data used in the assertion
+    ```
+    Dto actualDTO = requestDto();
+    
+    // Production code is used here
+    List<data> expectedData = ProductionCode.getData(actualDTO);
+    assertThat(actualDTO.getData()).isEqualTo(expectedStates);
+    ```
+    A better way of handling this is the following:
+    ```
+    assertThat(actualDTO.states).isEqualTo(List.of(States.ACTIVE, States.REJECTED));
+    ```
+    This will achieve the same result in terms of test cases but will actually break if the functionality is altered, which the previous test would not do.
+    
+    - In the following example even though production code is not used the code in the test is a copy of the production code
+    ```
+    Entity input = new Entity(...);
+    insertIntoDatabase(input);
+    
+    DTO actualDTO = createDTO();
+    
+    // mapEntityToDto() contains the same logic as in the production code
+    ProductDTO expectedDTO = mapEntityToDto(inputEntity);
+    assertThat(actualDTO).isEqualTo(expectedDTO);
+    ```
+    The better way to handle this is to create the expected data to validate against from variables instead of code
+    ```
+    ...
+    ProductDTO expectedDTO = new DTO(...)
+    assertThat(actualDTO).isEqualTo(expectedDTO);
+    ```
+
+- Mega test classes
+    - Massive unit test classes do not always make it as easy to read as it could be
+        - Unit tests are setup/created based on existing production classes in a lot of cases:
+        ```
+        FinancialQueries -> FinanicialQueriesTest
+        ```
+    - This is not a hard requirement though
+      ```
+      FinancialQueries  -> FinanicialQueriesTest
+                        -> FinanicialQueriesSerializationTest
+      ```
+    - another option is to group tests within a test classs together, although this does not reduce the amount of lines per file it could make the test easier to follow
+
+- Do not create inter-test dependencies
+    - Every test case should be responsible for its own setup and teardown
+        - This wil reduce the amount of failing tests, making it easier to find the problem and update the implementation or test data
+
+- High coverage != good testing
+    - Having a 100% code coverage does not mean the code is actually tested properly, it only means all lines of code are at least in some way covered. This does not mean that the unit tests are actually testing functionality properly or just calling the code.
+
+- MVP unit tests:
+    - happy flow
+    - unhappy flow
+    - edge case(s)
+
 # TODO
-1. use buildpacks and publish image to azure
-2. Use templates or shared yaml for multiple repositories (Taskgroups? https://docs.microsoft.com/en-us/azure/devops/pipelines/library/task-groups?view=azure-devops)
-3. use multiple build agens(jobs) to do parralel builds setup needed? https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser
-4. Azure pipelines only deploy/release master branch
-5. setup kurbernetes cluster using kustomize or helm
-6. deploy to kubernetes cluster
-7. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
-8. seperate db instead of in memory
-9. release pipelines (acceptance environment + production environment)
-10. CI/CD more validation && releasing to different environments https://docs.microsoft.com/en-us/azure/devops/pipelines/release/define-multistage-release-process?view=azure-devops&viewFallbackFrom=vsts
-11. 
-11. 
+Finish reading https://martinfowler.com/testing/
+
+1. document deployment based on a image from the containerregistry in azure
+2. add assertion framworks/libraries (do multiple to show difference in syntax and error messages?)
+    - assertj
+    - hamcrest
+    - truth (google)
+3. mocking framworks/libraries (pick one)
+    - Mockito
+    - EasyMock
+4. Json assertions?
+    - JsonAssert
+    - JsonPath
+5. Mutation testing
+    - using https://pitest.org/ [Baeldung](https://www.baeldung.com/java-mutation-testing-with-pitest)
+6. Archunit basic setup
+7. Contract testing [Baeldung](https://www.baeldung.com/pact-junit-consumer-driven-contracts)
+    - REST
+    - Kafka/Messages
+    - with pact broker
+8. Update readme with descriptions of test levels ***WIP***
+    - Unit Test A unit test is performed on a self-contained unit (usually a class or method) and should be performed whenever a unit has been implemented or updating of a unit has been completed.
+      This means it's run whenever you've written a class/method, fixed a bug, changed functionality...
+
+    - Integration Test,
+      Integration test aims to test how well several units interact with each other. This type of test should be performed Whenever a new form of communications has been established between units or the nature of their interaction have changed.
+      This means it's run whenever a recently written unit is integrated into the rest of the system or whenever a unit which is interacts with other systems has been updated (and successfully completed its unit tests).
+
+    - Regression Test,
+      Regression tests are performed whenever anything has been changed in the system, in order to check that no new bugs have been introduced.
+      This means it's run after all patches, upgrades, bug fixes. Regression testing can be seen as a special case of combined unit test and integration test.
+
+    - Acceptance Test,
+      Acceptance tests are performed whenever it is relevant to check that a subsystem (possibly the entire system) fulfils its entire specifications.
+      This means it's mainly run before finishing a new deliverable or announcing completion of a larger task. See this as your final check to see that you've really completed your goals before running to the client/boss and announcing victory.
+9. Test containers?
+10. Integration testing
+    - https://www.baeldung.com/integration-testing-in-spring
+    - https://www.docker.com/blog/maintainable-integration-tests-with-docker/
+11. Regression testing
+    - https://www.javacodegeeks.com/2019/07/regression-testing-tools-techniques.html
+12. End to end testing
+    - https://www.javacodegeeks.com/2020/08/end-to-end-testing-in-agile-all-you-need-to-know.html
+13. Performance testing (Pick one)
+    - JMeter
+    - Gatling
+14. Penetration testing
+    - Mostly done by external companies consisting of professionals
+    - What can be done by the developers?
+    - [OWASP](https://owasp.org/www-community/Source_Code_Analysis_Tools)
+    - Nessus, Zap, Skipfish, XSSer
+
+15. Use templates or shared yaml for multiple repositories (Taskgroups? https://docs.microsoft.com/en-us/azure/devops/pipelines/library/task-groups?view=azure-devops)
+16. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
+17. seperate db instead of in memory
+18. release pipelines (acceptance environment + production environment)
