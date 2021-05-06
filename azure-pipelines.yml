@@ -83,7 +83,7 @@ stages:
       pool:
         vmImage: $(vmImageName)
 
-    steps:
+      steps:
       - task: Cache@2
         displayName: Cache Maven local repo
         inputs:
