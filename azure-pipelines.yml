@@ -81,9 +81,17 @@ stages:
         goals: 'org.pitest:pitest-maven:mutationCoverage'
         publishJUnitResults: false
 
-    - task: PublishMutationReport@0
+    - task: PublishBuildArtifacts@1
       inputs:
-        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
+        pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
+        artifactName: HtmlReport
+
+    # https://marketplace.visualstudio.com/items?itemName=stryker-mutator.mutation-report-publisher
+    # only publishes a single page and not the entire Pitest result folder
+    # might be achievable via https://marketplace.visualstudio.com/items?itemName=LakshayKaushik.PublishHTMLReports
+#    - task: PublishMutationReport@0
+#      inputs:
+#        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
 
 #- stage: Deploy
 #  displayName: Deploy stage

@@ -152,6 +152,7 @@ az webapp config appsettings set --resource-group <group-name> --name <app-name>
 
 ## Mutation testing - tests for your tests
 ***WIP (expand explanation and benefits/downsides)***
+***WIP publish mutation test report in pipeline to be viewable there instead of via artifact publishing***
 
 Mutation testing is implemented using [Pitest](https://pitest.org/).
 The goal of mutation testing as described on the website:
