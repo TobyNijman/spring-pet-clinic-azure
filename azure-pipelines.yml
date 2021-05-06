@@ -73,6 +73,19 @@ stages:
         command: 'push'
         tags: 'latest'
 
+    - task: Maven@3
+      displayName: Run mutation tests
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+        goals: 'org.pitest:pitest-maven:mutationCoverage'
+        publishJUnitResults: false
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
+        artifactName: HtmlReport
+
 #- stage: Deploy
 #  displayName: Deploy stage
 #  dependsOn: Build

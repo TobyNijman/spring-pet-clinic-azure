@@ -107,7 +107,19 @@
       <groupId>org.springframework.boot</groupId>  
       <artifactId>spring-boot-devtools</artifactId>  
       <optional>true</optional> 
-    </dependency> 
+    </dependency>
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-maven</artifactId>
+      <version>1.6.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-junit5-plugin</artifactId>
+      <version>0.14</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>  
   <build> 
     <plugins> 
@@ -260,7 +272,26 @@
             <version>${mockito.version}</version> 
           </dependency> 
         </dependencies> 
-      </plugin> 
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>0.14</version>
+          </dependency>
+        </dependencies>
+<!--        <configuration>-->
+<!--          <targetClasses>-->
+<!--            <param>mutationtesting.*</param>-->
+<!--          </targetClasses>-->
+<!--          <targetTests>-->
+<!--            <param>mutationtesting.*</param>-->
+<!--          </targetTests>-->
+<!--        </configuration>-->
+      </plugin>
     </plugins> 
   </build>  
   <licenses> 

@@ -104,9 +104,9 @@ To push to the azure container registry we can add the following step in the pip
 
 ##Deploying the image
 Done by creating a release pipelines which deploys to a custom container app service on every image version update.
-<br/>
+    <br/>
 ![Screenshot](readme-images/release-pipeline.PNG)
-<br/>
+    <br/>
 Steps:
 1. go to https://dev.azure.com/
 2. go to releases
@@ -122,9 +122,9 @@ Steps:
 6. Go to Stages and click on job/task link at the bottom
 7. click unlink all
 8. setup the correct image name etc for the deploy Azure App Service task
-    <br/>
+        <br/>
     ![Screenshot](readme-images/task.PNG)
-    <br/>
+        <br/>
    
     - The resulting yaml for the task will look like this:
     ```
@@ -149,6 +149,93 @@ This is also possible via the shell.
 //Azure CLI
 az webapp config appsettings set --resource-group <group-name> --name <app-name> --settings WEBSITES_PORT=8000
 ```
+
+## Mutation testing - tests for your tests
+Mutation testing is implemented using [Pitest](https://pitest.org/).
+The goal of mutation testing as described on the website:
+
+***PIT runs your unit tests against automatically modified versions of your application code. When the application code changes, it should produce different results and cause the unit tests to fail. If a unit test does not fail in this situation, it may indicate an issue with the test suite.***
+
+###The setup:
+Add the plugin to build/plugins in your pom.xml
+```
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <version>LATEST</version>
+</plugin>
+```
+By default pitest will mutate all code in your project. You can limit which code is mutated and which tests are run using targetClasses and targetTests. Be sure to read the globs section if you want to use exact class names.
+```
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <version>LATEST</version>
+    <configuration>
+        <targetClasses>
+            <param>com.your.package.root.want.to.mutate*</param>
+        </targetClasses>
+        <targetTests>
+            <param>com.your.package.root*</param>
+        </targetTests>
+    </configuration>
+</plugin>
+```
+###MutationCoverage goal
+The mutation coverage goal analyses all classes in the codebase that match the target tests and target classes filters.
+```
+mvn org.pitest:pitest-maven:mutationCoverage
+```
+This will output an html report to ***target/pit-reports/YYYYMMDDHHMI***.
+
+To speed-up repeated analysis of the same codebase set the withHistory parameter to true.
+```
+mvn -DwithHistory org.pitest:pitest-maven:mutationCoverage
+```
+If you see the following in the logging: ***Found 0 tests*** 
+
+Then you might need to include the following plugin.
+```
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <dependencies>
+      <dependency>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-junit5-plugin</artifactId>
+        <version>0.14</version>
+      </dependency>
+    </dependencies>
+</plugin>
+```
+Afterwards your tests should have been picked up: ***Found  42 tests***
+
+###Downsides
+Mutation testing takes quite some time, as an example for this process it takes 2 minutes to run. 
+So you probably want to specify which classes and tests you want to run mutation testing on.
+
+Another option would be to run these tests periodically and not on every build.
+```
+================================================================================
+- Statistics
+================================================================================
+>> Generated 118 mutations Killed 82 (69%)
+>> Mutations with no coverage 8. Test strength 75%
+>> Ran 247 tests (2.09 tests per mutation)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:01 min
+[INFO] Finished at: 2021-05-06T15:18:42+02:00
+[INFO] ------------------------------------------------------------------------
+```
+    <br/>
+![Screenshot](readme-images/mutation-test-result.PNG)
+    <br/>
+    <br/>
+![Screenshot](readme-images/mutation-test-result-2.PNG)
+    <br/>
+
 
 ##(Unit) testing best practices
 **(WIP)**
@@ -287,11 +374,11 @@ Deploy your Azure Web App and run tests or cloud-based web performance tests.
 
 1. document deployment based on a image from the containerregistry in azure
 2. add assertion framworks/libraries (do multiple to show difference in syntax and error messages?)
-    - assertj
+    - assertj - used in the tests already
     - hamcrest
     - truth (google)
 3. mocking framworks/libraries (pick one)
-    - Mockito
+    - Mockito - used in the tests already
     - EasyMock
 4. Json assertions?
     - JsonAssert
