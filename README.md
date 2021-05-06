@@ -153,8 +153,11 @@ az webapp config appsettings set --resource-group <group-name> --name <app-name>
 ## Mutation testing - tests for your tests
 Mutation testing is implemented using [Pitest](https://pitest.org/).
 The goal of mutation testing as described on the website:
-
-***PIT runs your unit tests against automatically modified versions of your application code. When the application code changes, it should produce different results and cause the unit tests to fail. If a unit test does not fail in this situation, it may indicate an issue with the test suite.***
+</br>
+*PIT runs your unit tests against automatically modified versions of your application code. When the application code changes, 
+it should produce different results and cause the unit tests to fail. If a unit test does not fail in this situation, 
+it may indicate an issue with the test suite.*
+<br/>
 
 ###The setup:
 Add the plugin to build/plugins in your pom.xml
