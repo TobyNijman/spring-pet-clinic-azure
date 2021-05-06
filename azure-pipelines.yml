@@ -73,37 +73,17 @@ stages:
         command: 'push'
         tags: 'latest'
 
-- stage: MutationTesting
-  displayName: Mutation Testing stage
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-    - job: MavenRunPitest
-      displayName: Maven Run MutationTests
-      pool:
-        vmImage: $(vmImageName)
+    - task: Maven@3
+      displayName: Run mutation tests
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+        goals: 'org.pitest:pitest-maven:mutationCoverage'
+        publishJUnitResults: false
 
-      steps:
-      - task: Cache@2
-        displayName: Cache Maven local repo
-        inputs:
-          key: 'maven | "$(Agent.OS)" | **/pom.xml'
-          restoreKeys: |
-            maven | "$(Agent.OS)"
-            maven
-          path: $(MAVEN_CACHE_FOLDER)
-
-      - task: Maven@3
-        displayName: Run mutation tests
-        inputs:
-          mavenPomFile: 'pom.xml'
-          mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-          goals: 'org.pitest:pitest-maven:mutationCoverage'
-          publishJUnitResults: false
-
-      - task: PublishMutationReport@0
-        inputs:
-          reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
+    - task: PublishMutationReport@0
+      inputs:
+        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
 
 #- stage: Deploy
 #  displayName: Deploy stage

@@ -151,6 +151,8 @@ az webapp config appsettings set --resource-group <group-name> --name <app-name>
 ```
 
 ## Mutation testing - tests for your tests
+***WIP (expand explanation and benefits/downsides)***
+
 Mutation testing is implemented using [Pitest](https://pitest.org/).
 The goal of mutation testing as described on the website:
 </br>
@@ -386,8 +388,6 @@ Deploy your Azure Web App and run tests or cloud-based web performance tests.
 4. Json assertions?
     - JsonAssert
     - JsonPath
-5. Mutation testing
-    - using https://pitest.org/ [Baeldung](https://www.baeldung.com/java-mutation-testing-with-pitest)
 6. Archunit basic setup
 7. Contract testing usin Pact [Baeldung](https://www.baeldung.com/pact-junit-consumer-driven-contracts)
     - REST
