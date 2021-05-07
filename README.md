@@ -377,6 +377,9 @@ Look into:
 Release pipelines
 Azure App Service deployment with tests and performance tests
 Deploy your Azure Web App and run tests or cloud-based web performance tests.
+  Service allready contains jmeter performance tests
+
+https://docs.microsoft.com/nl-nl/azure/app-service/quickstart-multi-container
 
 1. document deployment based on a image from the containerregistry in azure
 2. add assertion framworks/libraries (do multiple to show difference in syntax and error messages?)
