@@ -83,18 +83,18 @@ stages:
         DockerRepository: 'spring-petclinic'
         DockerImageTag: latest
 
-    - task: Maven@3
-      displayName: Run mutation tests
-      inputs:
-        mavenPomFile: 'pom.xml'
-        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-        goals: 'org.pitest:pitest-maven:mutationCoverage'
-        publishJUnitResults: false
+    # - task: Maven@3
+    #   displayName: Run mutation tests
+    #   inputs:
+    #     mavenPomFile: 'pom.xml'
+    #     mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+    #     goals: 'org.pitest:pitest-maven:mutationCoverage'
+    #     publishJUnitResults: false
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
-        artifactName: HtmlReport
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
+    #     artifactName: HtmlReport
 
     # https://marketplace.visualstudio.com/items?itemName=stryker-mutator.mutation-report-publisher
     # only publishes a single page and not the entire Pitest result folder
@@ -103,26 +103,26 @@ stages:
 #      inputs:
 #        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
 
-#- stage: Deploy
-#  displayName: Deploy stage
-#  dependsOn: Build
-#  condition: succeeded()
-#  jobs:
-#    - deployment: DeployLinuxWebApp
-#      displayName: Deploy Linux Web App
-#      environment: $(environmentName)
-#      pool:
-#        vmImage: $(vmImageName)
-#        strategy:
-#        runOnce:
-#          deploy:
-#            steps:
-#              - task: AzureRmWebAppDeployment@4
-#                displayName: 'Deploy Azure App Service'
-#                inputs:
-#                  azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
-#                  appType: webAppContainer
-#                  WebAppName: springPetClinicAzure
-#                  DockerNamespace: containerregistrypetclinic.azurecr.io
-#                  DockerRepository: 'spring-petclinic'
-#                  DockerImageTag: latest
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+    - deployment: DeployLinuxWebApp
+      displayName: Deploy Linux Web App
+      environment: $(environmentName)
+      pool:
+        vmImage: $(vmImageName)
+        strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: AzureRmWebAppDeployment@4
+                displayName: 'Deploy Azure App Service'
+                inputs:
+                  azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+                  appType: webAppContainer
+                  WebAppName: springPetClinicAzure
+                  DockerNamespace: containerregistrypetclinic.azurecr.io
+                  DockerRepository: 'spring-petclinic'
+                  DockerImageTag: latest
