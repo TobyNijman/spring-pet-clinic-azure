@@ -243,7 +243,7 @@ Another option would be to run these tests periodically and not on every build.
     <br/>
 
 
-##(Unit) testing best practices
+## Unit testing best practices
 **(WIP)**
 
 - Using the Give, When, Then structure:
