@@ -73,6 +73,18 @@ stages:
         command: 'push'
         tags: 'latest'
 
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'Deploy Azure App Service'
+      inputs:
+        azureSubscription: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
+        appType: webAppContainer
+        WebAppName: springPetClinicAzure
+        deployToSlotOrASE: true
+        ResourceGroupName: PetClinic
+        DockerNamespace: containerregistrypetclinic.azurecr.io
+        DockerRepository: 'spring-petclinic'
+        DockerImageTag: latest
+        
     - task: Maven@3
       displayName: Run mutation tests
       inputs:
