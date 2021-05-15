@@ -102,6 +102,35 @@ To push to the azure container registry we can add the following step in the pip
         tags: 'latest'
 ```
 
+### Removing the image from ACR automatically
+To setup automatic removal of images there are multiple options.
+
+One of which is creating the following variable using the acr purge command
+```
+PURGE_CMD="acr purge --filter 'spring-petclinic:.*' --ago 0d  --untagged"
+```
+This command requires the following options:
+- **--filter** - A repository and a regular expression to filter tags in the repository. Examples: --filter "hello-world:.*" matches all tags in the hello-world repository, and --filter "hello-world:^1.*" matches tags beginning with 1. Pass multiple --filter parameters to purge multiple repositories.
+- **--ago** - A Go-style duration string to indicate a duration beyond which images are deleted. The duration consists of a sequence of one or more decimal numbers, each with a unit suffix. Valid time units include "d" for days, "h" for hours, and "m" for minutes. For example, --ago 2d3h6m selects all filtered images last modified more than 2 days, 3 hours, and 6 minutes ago, and --ago 1.5h selects images last modified more than 1.5 hours ago.
+
+There are also a couple of optional options:
+
+- **--untagged** - Specifies that manifests that don't have associated tags (untagged manifests) are deleted.
+- **--dry-run** - Specifies that no data is deleted, but the output is the same as if the command is run without this flag. This parameter is useful for testing a purge command to make sure it does not inadvertently delete data you intend to preserve.
+- **--keep** - Specifies that the latest x number of to-be-deleted tags are retained.
+- **--concurrency** - Specifies a number of purge tasks to process concurrently. A default value is used if this parameter is not provided.
+
+To then run the command manually you can run the following command:
+```
+az acr run --cmd "$PURGE_CMD" --registry containerregistrypetclinic /dev/null
+```
+To setup a [scheduled task](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tasks-scheduled) for this run the following command:
+```
+az acr task create --name purgeTask --cmd "$PURGE_CMD" --schedule "0 0 * * *" --registry containerregistrypetclinic --context /dev/null
+```
+
+Setting up a retention policy: [link](https://docs.microsoft.com/nl-nl/azure/container-registry/container-registry-retention-policy)
+
 ##Deploying the image
 Done by creating a release pipelines which deploys to a custom container app service on every image version update.
     <br/>
