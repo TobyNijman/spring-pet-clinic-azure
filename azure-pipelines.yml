@@ -5,7 +5,8 @@
 
 # trigger:
 # - main
-
+pr:
+  - main
 variables:
   # general
   serviceConnection: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
