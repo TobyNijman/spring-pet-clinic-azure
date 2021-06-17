@@ -33,6 +33,8 @@ variables:
   sourceBranch: $variables['Build.SourceBranch']
   buildReason: $variables['Build.Reason']
 
+  a: ${{System.PullRequest.TargetBranch}}
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -50,7 +52,8 @@ stages:
         echo Build.SourceBranch: $(Build.SourceBranch)
         echo Build.BuildId: $(Build.BuildId)
         echo System.DefinitionId: $(System.DefinitionId)
-        echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
+        echo System.PullRequest.TargetBranch: $(a)
+        echo System.PullRequest.TargetBranch: ${{System.PullRequest.TargetBranch}}
         echo master branch build: $(isMain) # outputs True
 
     - task: Cache@2
