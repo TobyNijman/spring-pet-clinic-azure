@@ -27,11 +27,9 @@ variables:
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
   isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main')]
-
   systemPullrequestTargetBranch: variables['System.PullRequest.TargetBranch']
   sourceBranch: variables['Build.SourceBranch']
   buildReason: variables['Build.Reason']
-
 
 stages:
 - stage: Build
@@ -43,14 +41,10 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-    - script: |
-        echo ${systemPullrequestTargetBranch}
-        echo ${sourceBranch}
-        echo ${buildReason}
 
-    - task: MyTask@1
-      displayName: logging
-      - script: echo 'systemPullrequestTargetBranch ' $(systemPullrequestTargetBranch) ', sourceBranch' $(sourceBranch) ', buildReason ' $(buildReason)
+    - script: echo {{ variables.systemPullrequestTargetBranch }}
+    - script: echo {{ variables.sourceBranch }}
+    - script: echo {{ variables.buildReason }}
 
     - task: Cache@2
       displayName: Cache Maven local repo
