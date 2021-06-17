@@ -45,7 +45,7 @@ stages:
     steps:
     - script: |
         echo targetBranch: $(System.PullRequest.TargetBranch)
-        echo option 2: ${{System.PullRequest.TargetBranch}}
+        echo build reason: $(Build.Reason)
         echo source branch: $(Build.SourceBranch)
         echo master branch build: $(isMain) # outputs True
 
