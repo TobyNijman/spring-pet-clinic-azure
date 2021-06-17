@@ -3,12 +3,10 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-# trigger:
-# - main
 trigger:
-  - main
+  - main #  By default only main will be build
 pr:
-  - main
+  - main #  By default only pr's to main will be build
 variables:
   # general
   serviceConnection: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
