@@ -43,13 +43,10 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-    – task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: 'env | sort'
-    - script: echo $(systemPullrequestTargetBranch)
-    - script: echo $(sourceBranch)
-    - script: echo $(buildReason)
+
+    - script: echo $(isMain)
+    - script: echo ${{ $variables.Build.Reason }}
+    - script: echo ${{ $variables.isMain }}
 
     - task: Cache@2
       displayName: Cache Maven local repo
@@ -92,7 +89,7 @@ stages:
 
     - task: Maven@3
       displayName: Run mutation tests
-      condition: eq(variables.isPullRequestToMain, true)
+      condition: and(succeeded(), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/master'))
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
@@ -100,7 +97,7 @@ stages:
         publishJUnitResults: false
 
     - task: PublishBuildArtifacts@1
-      condition: eq(variables.isPullRequestToMain, true)
+      condition: and(succeeded(), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/master'))
       inputs:
         pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
         artifactName: HtmlReport
