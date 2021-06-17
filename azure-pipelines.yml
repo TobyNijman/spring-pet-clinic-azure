@@ -5,6 +5,8 @@
 
 # trigger:
 # - main
+trigger:
+  - main
 pr:
   - main
 variables:
