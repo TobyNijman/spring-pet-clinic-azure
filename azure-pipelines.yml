@@ -45,7 +45,12 @@ stages:
     - script: echo {{ variables.systemPullrequestTargetBranch }}
     - script: echo {{ variables.sourceBranch }}
     - script: echo {{ variables.buildReason }}
-
+    
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'evn | sort'
+    
     - task: Cache@2
       displayName: Cache Maven local repo
       inputs:
