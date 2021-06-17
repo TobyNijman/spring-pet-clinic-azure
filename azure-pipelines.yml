@@ -33,8 +33,9 @@ variables:
   sourceBranch: $variables['Build.SourceBranch']
   buildReason: $variables['Build.Reason']
 
-  compileVar: ${{ variables.staticVar }}
-  runVar: $[variables['Build.SourceBranch']] # runtime expression
+  compileVar: ${{ variables.Build.SourceBranch }}
+  runVar: $variables['Build.SourceBranch'] # runtime expression
+  runVar2: variables['Build.SourceBranch'] # runtime expression
 
 
 stages:
@@ -47,13 +48,11 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-
-    - script: echo $(isMain)
-
     - script: |
         echo $(runVar) # outputs my value
+        echo $(runVar2) # outputs my value
         echo $(compileVar) # outputs my value
-        echo $(isMain) # outputs True
+        echo master branch build $(isMain) # outputs True
 
     - task: Cache@2
       displayName: Cache Maven local repo
