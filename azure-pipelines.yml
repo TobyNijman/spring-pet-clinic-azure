@@ -3,10 +3,10 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-# trigger:
-# - main
+trigger:
+  - main #  By default only main will be build
 pr:
-  - main
+  - main #  By default only pr's to main will be build
 variables:
   # general
   serviceConnection: 'Toby Azure(09319cd6-009c-4ff4-9518-b30522744c60)'
@@ -25,13 +25,10 @@ variables:
   # service connections
   containerRegistryServiceConnection: 'containerregistrypetclinic'
 
-  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  # checks
+  isMainBranch: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'main')]
 
-  isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main')]
-  systemPullrequestTargetBranch: variables['System.PullRequest.TargetBranch']
-  sourceBranch: variables['Build.SourceBranch']
-  buildReason: variables['Build.Reason']
-  
 stages:
 - stage: Build
   displayName: Build stage
@@ -42,16 +39,13 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-    
-    - script: echo {{ variables.systemPullrequestTargetBranch }}
-    - script: echo {{ variables.sourceBranch }}
-    - script: echo {{ variables.buildReason }}
-    
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: 'evn | sort'
-    
+    - script: |
+        echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
+        echo Build.Reason: $(Build.Reason)
+        echo Build.SourceBranch: $(Build.SourceBranch)
+        echo pull request to master: $(isPullRequestToMain)
+        echo master branch build: $(isMainBranch)
+
     - task: Cache@2
       displayName: Cache Maven local repo
       inputs:
@@ -91,30 +85,25 @@ stages:
         command: 'push'
         tags: 'latest'
 
-    # - task: Maven@3
-    #   displayName: Run mutation tests
-    #   inputs:
-    #     mavenPomFile: 'pom.xml'
-    #     mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-    #     goals: 'org.pitest:pitest-maven:mutationCoverage'
-    #     publishJUnitResults: false
+    - task: Maven@3
+      displayName: Run mutation tests
+      condition: and(succeeded(), eq(variables.isPullRequestToMain, true))
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+        goals: 'org.pitest:pitest-maven:mutationCoverage'
+        publishJUnitResults: false
 
-    # - task: PublishBuildArtifacts@1
-    #   inputs:
-    #     pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
-    #     artifactName: HtmlReport
-
-    # https://marketplace.visualstudio.com/items?itemName=stryker-mutator.mutation-report-publisher
-    # only publishes a single page and not the entire Pitest result folder
-    # might be achievable via https://marketplace.visualstudio.com/items?itemName=LakshayKaushik.PublishHTMLReports
-#    - task: PublishMutationReport@0
-#      inputs:
-#        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
+    - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), eq(variables.isPullRequestToMain, true))
+      inputs:
+        pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
+        artifactName: PIT-mutation-testing-report
 
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
-  condition: and(succeeded(), eq(variables.isMain, true))
+  condition: and(succeeded(), eq(variables.isMainBranch, true))
   jobs:
     - deployment: DeployLinuxWebApp
       displayName: Deploy Linux Web App
