@@ -44,8 +44,7 @@ stages:
         echo Build.Reason: $(Build.Reason)
         echo Build.SourceBranch: $(Build.SourceBranch)
         echo pull request to master: $(isPullRequestToMain)
-        echo master branch build: $(isMain) # outputs True
-        echo a: $(a)
+        echo master branch build: $(isMainBranch)
 
     - task: Cache@2
       displayName: Cache Maven local repo
