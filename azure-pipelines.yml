@@ -44,9 +44,9 @@ stages:
     
     steps:
     - script: |
-        echo $(systemPullrequestTargetBranch)
-        echo $(sourceBranch)
-        echo $(buildReason)
+        echo ${systemPullrequestTargetBranch}
+        echo ${sourceBranch}
+        echo ${buildReason}
 
     - task: MyTask@1
       displayName: logging
