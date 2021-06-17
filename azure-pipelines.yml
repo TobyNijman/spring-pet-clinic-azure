@@ -26,7 +26,7 @@ variables:
 
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
-  isPullRequestToMain: $[variables[eq('System.PullRequest.TargetBranch'], 'refs/heads/main')]
+  isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main')]
 
 stages:
 - stage: Build
