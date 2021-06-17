@@ -3,8 +3,8 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-trigger:
-- main
+# trigger:
+# - main
 
 variables:
   # general
@@ -23,6 +23,10 @@ variables:
 
   # service connections
   containerRegistryServiceConnection: 'containerregistrypetclinic'
+
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+  isPullRequestToMain: $[variables[eq('System.PullRequest.TargetBranch'], 'refs/heads/main')]
 
 stages:
 - stage: Build
@@ -96,7 +100,7 @@ stages:
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
-  condition: succeeded()
+  condition: and(succeeded(), eq(variables.isMain, true))
   jobs:
     - deployment: DeployLinuxWebApp
       displayName: Deploy Linux Web App
