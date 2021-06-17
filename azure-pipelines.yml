@@ -25,8 +25,10 @@ variables:
   # service connections
   containerRegistryServiceConnection: 'containerregistrypetclinic'
 
+  # checks
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
   isPullRequestToMain: $[or(contains(variables['Build.SourceBranch'], '/merge') , eq(variables['System.PullRequest.TargetBranch'], 'main'))]
+  a: $[eq(variables['System.PullRequest.TargetBranch'], 'main')]
 
 stages:
 - stage: Build
@@ -44,6 +46,7 @@ stages:
         echo Build.SourceBranch: $(Build.SourceBranch)
         echo pull request to master: $(isPullRequestToMain)
         echo master branch build: $(isMain) # outputs True
+        echo a: $(a)
 
     - task: Cache@2
       displayName: Cache Maven local repo
