@@ -33,6 +33,8 @@ variables:
   sourceBranch: $variables['Build.SourceBranch']
   buildReason: $variables['Build.Reason']
 
+  a: $[variables[System.PullRequest.TargetBranch]
+
 stages:
 - stage: Build
   displayName: Build stage
