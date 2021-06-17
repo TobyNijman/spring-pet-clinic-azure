@@ -52,6 +52,9 @@ stages:
         echo $(runVar) # outputs my value
         echo $(runVar2) # outputs my value
         echo $(compileVar) # outputs my value
+        echo $(System.PullRequest.TargetBranch)
+        echo $(Build.Reason)
+        echo $(Build.SourceBranch)
         echo master branch build $(isMain) # outputs True
 
     - task: Cache@2
