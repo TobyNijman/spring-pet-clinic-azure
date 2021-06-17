@@ -44,9 +44,13 @@ stages:
     
     steps:
     - script: |
-        echo targetBranch: $(System.PullRequest.TargetBranch)
-        echo build reason: $(Build.Reason)
-        echo source branch: $(Build.SourceBranch)
+        echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
+        echo Build.Reason: $(Build.Reason)
+        echo Build.SourceVersionMessage: $(Build.SourceVersionMessage)
+        echo Build.SourceBranch: $(Build.SourceBranch)
+        echo Build.BuildId: $(Build.BuildId)
+        echo System.DefinitionId: $(System.DefinitionId)
+        echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
         echo master branch build: $(isMain) # outputs True
 
     - task: Cache@2
