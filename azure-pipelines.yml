@@ -53,7 +53,6 @@ stages:
         echo Build.BuildId: $(Build.BuildId)
         echo System.DefinitionId: $(System.DefinitionId)
         echo System.PullRequest.TargetBranch: $(a)
-        echo System.PullRequest.TargetBranch: ${{System.PullRequest.TargetBranch}}
         echo master branch build: $(isMain) # outputs True
 
     - task: Cache@2
