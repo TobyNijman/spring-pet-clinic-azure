@@ -33,6 +33,10 @@ variables:
   sourceBranch: $variables['Build.SourceBranch']
   buildReason: $variables['Build.Reason']
 
+  compileVar: ${{ variables.staticVar }}
+  runVar: $[variables['Build.SourceBranch'] # runtime expression
+
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -47,6 +51,11 @@ stages:
     - script: echo $(isMain)
     - script: echo ${{ $variables.Build.Reason }}
     - script: echo ${{ $variables.isMain }}
+
+    - script: |
+        echo $(runVar) # outputs my value
+        echo $(compileVar) # outputs my value
+        echo $(isMain) # outputs True
 
     - task: Cache@2
       displayName: Cache Maven local repo
