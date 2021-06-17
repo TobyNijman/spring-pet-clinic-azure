@@ -26,12 +26,7 @@ variables:
   containerRegistryServiceConnection: 'containerregistrypetclinic'
 
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  isPullRequestToMain: $[contains(variables['Build.SourceBranch'], '/merge')]
-
-  # vairable tests
-  systemPullrequestTargetBranch: $variables['System.PullRequest.TargetBranch']
-  sourceBranch: $variables['Build.SourceBranch']
-  buildReason: $variables['Build.Reason']
+  isPullRequestToMain: $[or(contains(variables['Build.SourceBranch'], '/merge') , eq(variables['System.PullRequest.TargetBranch'], 'main'))]
 
 stages:
 - stage: Build
@@ -47,8 +42,7 @@ stages:
         echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
         echo Build.Reason: $(Build.Reason)
         echo Build.SourceBranch: $(Build.SourceBranch)
-        echo Build.DefinitionName: $(Build.DefinitionName)
-        echo a: $(isPullRequestToMain)
+        echo pull request to master: $(isPullRequestToMain)
         echo master branch build: $(isMain) # outputs True
 
     - task: Cache@2
