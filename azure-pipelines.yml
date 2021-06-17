@@ -77,25 +77,20 @@ stages:
         command: 'push'
         tags: 'latest'
 
-    # - task: Maven@3
-    #   displayName: Run mutation tests
-    #   inputs:
-    #     mavenPomFile: 'pom.xml'
-    #     mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
-    #     goals: 'org.pitest:pitest-maven:mutationCoverage'
-    #     publishJUnitResults: false
+    - task: Maven@3
+      displayName: Run mutation tests
+      condition: eq(variables.isPullRequestToMain, true)
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
+        goals: 'org.pitest:pitest-maven:mutationCoverage'
+        publishJUnitResults: false
 
-    # - task: PublishBuildArtifacts@1
-    #   inputs:
-    #     pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
-    #     artifactName: HtmlReport
-
-    # https://marketplace.visualstudio.com/items?itemName=stryker-mutator.mutation-report-publisher
-    # only publishes a single page and not the entire Pitest result folder
-    # might be achievable via https://marketplace.visualstudio.com/items?itemName=LakshayKaushik.PublishHTMLReports
-#    - task: PublishMutationReport@0
-#      inputs:
-#        reportPattern: '$(System.DefaultWorkingDirectory)/target/pit-reports/**/index.html'
+    - task: PublishBuildArtifacts@1
+      condition: eq(variables.isPullRequestToMain, true)
+      inputs:
+        pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
+        artifactName: HtmlReport
 
 - stage: Deploy
   displayName: Deploy stage
