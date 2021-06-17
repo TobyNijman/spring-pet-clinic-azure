@@ -33,11 +33,6 @@ variables:
   sourceBranch: $variables['Build.SourceBranch']
   buildReason: $variables['Build.Reason']
 
-  compileVar: ${{ variables.Build.SourceBranch }}
-  runVar: $variables['Build.SourceBranch'] # runtime expression
-  runVar2: variables['Build.SourceBranch'] # runtime expression
-
-
 stages:
 - stage: Build
   displayName: Build stage
@@ -49,13 +44,10 @@ stages:
     
     steps:
     - script: |
-        echo $(runVar) # outputs my value
-        echo $(runVar2) # outputs my value
-        echo $(compileVar) # outputs my value
-        echo $(System.PullRequest.TargetBranch)
-        echo $(Build.Reason)
-        echo $(Build.SourceBranch)
-        echo master branch build $(isMain) # outputs True
+        echo targetBranch: $(System.PullRequest.TargetBranch)
+        echo build reason: $(Build.Reason)
+        echo source branch: $(Build.SourceBranch)
+        echo master branch build: $(isMain) # outputs True
 
     - task: Cache@2
       displayName: Cache Maven local repo
