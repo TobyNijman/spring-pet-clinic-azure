@@ -463,3 +463,5 @@ https://docs.microsoft.com/nl-nl/azure/app-service/quickstart-multi-container
 16. Deploy angular FE https://github.com/spring-petclinic/spring-petclinic-angular
 17. seperate db instead of in memory
 18. release pipelines (acceptance environment + production environment)
+
+https://docs.microsoft.com/en-us/samples/azure-samples/jmeter-aci-terraform/jmeter-aci-terraform/
