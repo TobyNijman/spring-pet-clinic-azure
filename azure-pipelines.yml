@@ -50,6 +50,7 @@ stages:
         echo System.PullRequest.TargetBranch: $(System.PullRequest.TargetBranch)
         echo Build.Reason: $(Build.Reason)
         echo Build.SourceBranch: $(Build.SourceBranch)
+        echo Build.DefinitionName: $(Build.DefinitionName)
         echo a: $(a)
         echo b: $(b)
         echo master branch build: $(isMain) # outputs True
