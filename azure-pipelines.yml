@@ -49,7 +49,6 @@ stages:
     steps:
 
     - script: echo $(isMain)
-    - script: echo ${{ $variables.isMain }}
 
     - script: |
         echo $(runVar) # outputs my value
