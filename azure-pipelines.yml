@@ -42,12 +42,9 @@ stages:
     
     steps:
     
-    - script: echo ${systemPullrequestTargetBranch}
-    - script: echo ${sourceBranch}
-    - script: echo ${buildReason}
-    - bash: echo $(systemPullrequestTargetBranch)
-    - bash: echo $(sourceBranch)
-    - bash: echo $(buildReason)
+    - script: echo {{ variables.systemPullrequestTargetBranch }}
+    - script: echo {{ variables.sourceBranch }}
+    - script: echo {{ variables.buildReason }}
 
     - task: Cache@2
       displayName: Cache Maven local repo
