@@ -28,6 +28,11 @@ variables:
 
   isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/main')]
 
+  systemPullrequestTargetBranch: variables['System.PullRequest.TargetBranch']
+  sourceBranch: variables['Build.SourceBranch']
+  buildReason: variables['Build.Reason']
+
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -38,6 +43,10 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
+    - task: MyTask@1
+      displayName: logging
+      - script: echo 'systemPullrequestTargetBranch ' $(systemPullrequestTargetBranch) ', sourceBranch' $(sourceBranch) ', buildReason ' $(buildReason)
+
     - task: Cache@2
       displayName: Cache Maven local repo
       inputs:
