@@ -98,7 +98,7 @@ stages:
       condition: and(succeeded(), eq(variables.isPullRequestToMain, true))
       inputs:
         pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
-        artifactName: HtmlReport
+        artifactName: PIT-mutation-testing-report
 
 - stage: Deploy
   displayName: Deploy stage
