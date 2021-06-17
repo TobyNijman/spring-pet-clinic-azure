@@ -43,7 +43,10 @@ stages:
       vmImage: $(vmImageName)
     
     steps:
-
+    – task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: 'env | sort'
     - script: echo $(systemPullrequestTargetBranch)
     - script: echo $(sourceBranch)
     - script: echo $(buildReason)
