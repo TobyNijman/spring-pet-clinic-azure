@@ -44,7 +44,6 @@ stages:
     
     steps:
     - script: |
-
         echo targetBranch: $(System.PullRequest.TargetBranch)
         echo option 2: ${{System.PullRequest.TargetBranch}}
         echo target2 $(Build.TargetBranch)
