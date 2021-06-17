@@ -34,7 +34,7 @@ variables:
   buildReason: $variables['Build.Reason']
 
   compileVar: ${{ variables.staticVar }}
-  runVar: $[variables['Build.SourceBranch'] # runtime expression
+  runVar: $[variables['Build.SourceBranch']] # runtime expression
 
 
 stages:
