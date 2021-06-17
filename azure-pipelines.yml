@@ -26,9 +26,8 @@ variables:
   containerRegistryServiceConnection: 'containerregistrypetclinic'
 
   # checks
-  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  isPullRequestToMain: $[or(contains(variables['Build.SourceBranch'], '/merge') , eq(variables['System.PullRequest.TargetBranch'], 'main'))]
-  a: $[eq(variables['System.PullRequest.TargetBranch'], 'main')]
+  isMainBranch: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  isPullRequestToMain: $[eq(variables['System.PullRequest.TargetBranch'], 'main')]
 
 stages:
 - stage: Build
@@ -89,7 +88,7 @@ stages:
 
     - task: Maven@3
       displayName: Run mutation tests
-      condition: and(succeeded(), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/master'))
+      condition: and(succeeded(), eq(variables.isPullRequestToMain, true))
       inputs:
         mavenPomFile: 'pom.xml'
         mavenOptions: '-Xmx3072m $(MAVEN_OPTS)'
@@ -97,7 +96,7 @@ stages:
         publishJUnitResults: false
 
     - task: PublishBuildArtifacts@1
-      condition: and(succeeded(), eq(variables['System.PullRequest.TargetBranch'], 'refs/heads/master'))
+      condition: and(succeeded(), eq(variables.isPullRequestToMain, true))
       inputs:
         pathToPublish: '$(System.DefaultWorkingDirectory)/target/pit-reports'
         artifactName: HtmlReport
@@ -105,7 +104,7 @@ stages:
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
-  condition: and(succeeded(), eq(variables.isMain, true))
+  condition: and(succeeded(), eq(variables.isMainBranch, true))
   jobs:
     - deployment: DeployLinuxWebApp
       displayName: Deploy Linux Web App
